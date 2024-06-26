@@ -1,7 +1,15 @@
 # TPS
 ThirdPersonShooter
 
-Features:
+# Controls
+TAB: Scoreboard
+WASD: Movement
+SPACE: Jump
+LEFT CLICK: Fire
+RIGHT CLICK: Aim
+E: Pickup weapon
+
+# Features
 - 5 weapons
 
 - 2 weapon handling modes
