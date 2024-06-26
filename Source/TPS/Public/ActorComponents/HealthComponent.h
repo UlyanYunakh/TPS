@@ -16,30 +16,27 @@ class TPS_API UHealthComponent : public UActorComponent
 public:
 	UHealthComponent();
 
-	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
-
 protected:
 	virtual void BeginPlay() override;
 
 public:
-	UFUNCTION(BlueprintCallable, Category = "Health Component")
-	virtual void AddHealth(const float Value);
-
-protected:
-	UFUNCTION()
-	virtual void OnRep_CurrHealth() const;
-
-	UFUNCTION()
-	virtual void OnDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	void GetLifetimeReplicatedProps(TArray<FLifetimeProperty>& OutLifetimeProps) const override;
 
 public:
-	FOnDeath OnDeath;
+	UFUNCTION(Server, Reliable, BlueprintCallable, Category = "Health")
+	virtual void AddHealth(const float Value);
+	virtual void AddHealth_Implementation(const float Value);
+
+protected:
+	UFUNCTION(Server, Reliable)
+	virtual void OnDamageTaken(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
+	virtual void OnDamageTaken_Implementation(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 	
 protected:
-	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Health Component", meta = (AllowPrivateAccess = "true"))
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category="Health", meta = (AllowPrivateAccess = "true"))
 	float MaxHealth = 100.0f;
 
-	UPROPERTY(BlueprintReadOnly, Category = "Health Component", ReplicatedUsing= OnRep_CurrHealth)
+	UPROPERTY(Replicated, BlueprintReadOnly, Category = "Health", meta = (AllowPrivateAccess = "true"))
 	float CurrHealth;
 		
 };
